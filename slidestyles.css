@@ -22,7 +22,8 @@ ol, ul {
 -------------------------------------------------- */
 img { /* common CSS for fluid rescaling, but respecting the image's actual pixel size */
     display: block;
-    max-width: 100%;
+    max-width: 70%;
+    max-height: 70%;
 }
 
 .remark-slide-content img { /* special requirement for slides: upscale images smaller than the available space to 100%, but don't leak out over the bottom */

@@ -14,22 +14,114 @@
 class: center, middle
 
 background-image: url(media/pixybay-polygon-906202_1280.jpg)
-# Slides In MarkDown
+# GitOps  
+### une mise en situation un peu réaliste
+### sur Kubernetes avec Flux  
 
 ???
 Your presenter notes
+---
+class: middle, blackbg
+background-image: url(https://images.prismic.io/figaroimmo/beaf6476116ab4bc3fbefb4ae897a934bfb3fc6d_fi9-montpellier-la-dynamique.jpg)
+name: Synopsis
+
+# Synopsis
+
+.blockquote[T’en as assez des _talks_ qui déploient des _hello-world_ pour démontrer la pertinence de l’outil *younameit*.  
+Ça tombe bien : ce qui nous intéresse, c’est plutôt d’essayer une mise en situation **DevSecOps** un peu réaliste.  
+On va donc construire pas à pas un scénario d’entreprise  avec des _dev teams_, qui _deploy / update / rollback_ des _WebApps_ Pokémon sur `Kubernetes`. Elles utilisent `Kustomize` ou des charts `Helm` pour cela.  
+Côté _Ops_, on va aussi se préoccuper des enjeux de sécurité de la plateforme : ségrégations des droits des équipes, des flux réseau des _WebApps_. Pour cela, nos _Ops_ vont utiliser `Kyverno`. Et puis des applis, ça se _monitor_, _patch management_ transparent sur la stack technique, métrologie, contrôle des activités sur le _cluster_.  
+On va voir comment ces équipes **collaborent** entre elles au quotidien dans un _workflow_ **GitOps** qui s’appuie sur `Kubernetes` et `Flux`, autour d'un code stocké dans Github,  et plein d’autres choses encore…]
+---
+class: center, middle, blackbg
+background-image: url(https://images.prismic.io/figaroimmo/beaf6476116ab4bc3fbefb4ae897a934bfb3fc6d_fi9-montpellier-la-dynamique.jpg)
+name: Speakers
+
+.left-column[
+### Laurent Grangeau
+#### Solution architect @ Google
+![Laurent Grangeau](https://pbs.twimg.com/profile_images/1007639151812988929/ln3iUxxF_400x400.jpg)
+]
+.right-column[
+### Ludovic Piot
+#### DevOps & Cloud architect Freelance
+@lpiot on Twitter
+![Ludovic Piot](https://pbs.twimg.com/profile_images/973490992853716992/lnvZBJHU_400x400.jpg)
+]
+---
+class: center, middle, blackbg
+background-image: url(https://images.prismic.io/figaroimmo/beaf6476116ab4bc3fbefb4ae897a934bfb3fc6d_fi9-montpellier-la-dynamique.jpg)
+name: Pour suivre…
+
+# Pour suivre…
+
+1. les dépôts sont dans `Github` : https://github.com/one-kubernetes
+1. le dépôt principal : https://github.com/one-kubernetes/workshop
+1. le présent [_slidedeck_](https://github.com/one-kubernetes/workshop/blob/main/slidedecks/slidedeck-fr.html) en 🇫🇷
+1. les [instructions du _workshop_](https://github.com/one-kubernetes/workshop/blob/main/documentation/flux-multi-tenant.md)
+---
+class: center, middle, blackbg
+
+background-image: url(media/pixybay-polygon-906202_1280.jpg)
+
+name: Scénario
+
+# Le scénario…
+---
+class: center, middle, blackbg
+background-image: url(https://images.prismic.io/figaroimmo/beaf6476116ab4bc3fbefb4ae897a934bfb3fc6d_fi9-montpellier-la-dynamique.jpg)
+
+# Pour suivre…
+
+On a 3 équipes : *dev1*, *dev2* et *ops*.  
 
 ---
-name: YourSlideName
+class: middle, blackbg
+background-image: url(https://images.prismic.io/figaroimmo/beaf6476116ab4bc3fbefb4ae897a934bfb3fc6d_fi9-montpellier-la-dynamique.jpg)
 
-# HowTo: Writing
+### L'application Pokemon ID
 
-To start writing your own slide deck in MarkDown, simply open the HTML file in your editor of choice and make changes as you wish. You can find all the places that you should edit by searching for the '#ToDo' hashtag inside the HTML file. Here are the different places in detail: 
+Une simple page `html` affichant la page _PokeDex_ d'un _Pokemon_…
+.left-column[
+```html
+<!doctype html>
+<html lang=en>
+(…)
+<body>
+(…)
+	<picture>
+		<img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/013.png">
+	</picture>
+(…)
+	<div class="message">
+		<h1>Aspicot #013</h1>
+		<div class="congrats">L'aiguillon sur son front est très pointu.(…)</div>
+	</div>
+(…)
+</html>
+```
+]
+.right-column[
 
-1. Write your presentation's title in the 'title' tag of the 'head' section
-2. Set '16:9' or '4:3' dimensions in the body.onload JavaScript
-3. Write your slides in MarkDown as shown in the examples
-4. Be inspiring!
+]
+---
+###
+
+Both devs build very simple Web apps that display Pokemon ID card. One Pokemon per app.
+Once the Web apps are developped, built and packaged, devs want to deploy them onto a Kubernetes cluster.
+The thing is… how to smartly deploy without relying on ops?
+
+A first historical version of the workshop is performed on Ms Azure and every command is performed from a Docker container that is our work environment so nothing is required but:
+
+a browser
+and a Google Cloud account able to provision resources on GKE.
+or an Azure account able to provision resources on Azure (especially AKS).
+First, we detail how to set-up this working environment within a Docker image. How to build it and run it interactively.
+
+Second, we provision a Kubernetes cluster in AKS.
+Then, we have a scenario on 3 tracks:
+
+
 
 ---
 name: ForSlideInterLinking
@@ -146,29 +238,6 @@ Author Name, 2001]
 
 ???
 Your presenter notes
-
----
-
-background-image: url(media/pixybay-polygon-906202_1280.jpg)
-
-# Code Snippet
-
-```js
-// Configurable Syntax Highlighing
-var key;
-var a = [];
-a[0] = "a";
-a[10] = "b";
-a[10000] = "c";
-for (key in a) {
-    if (a.hasOwnProperty(key)  &&        // Detail Comment
-        /^0$|^[1-9]\d*$/.test(key) &&
-        key <= 0123456789
-        ) {
-        console.log(a[key]);
-    }
-}
-```
 
 ---
 
